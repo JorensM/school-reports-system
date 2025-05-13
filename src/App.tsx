@@ -1,19 +1,117 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import RecordButton from './components/RecordButton'
 import SendButton from './components/SendButton'
 import clsx from 'clsx';
 import RecordIcon from './components/RecordIcon';
+import Spinner from './components/Spinner';
+
+class VoiceRecorder {
+
+  supported: boolean = false;
+  stream?: MediaStream;
+  recorder?: MediaRecorder;
+
+  chunks: Blob[] = [];
+  lastRecording?: Blob;
+
+  initialized: boolean = false;
+
+  stopped: boolean = true;
+
+  constructor() {
+    
+  }
+
+  async initialize() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      console.log("getUserMedia supported.");
+      const stream = await navigator.mediaDevices
+        .getUserMedia(
+          // constraints - only audio needed for this app
+          {
+            audio: true,
+          },
+        );
+
+      this.supported = true;
+      this.stream = stream;
+      this.recorder = new MediaRecorder(this.stream);
+      this.recorder.ondataavailable = (e) => {
+        this.chunks.push(e.data);
+        this.lastRecording = new Blob(this.chunks, { type: "audio/ogg; codecs=opus" });
+      }
+    }
+      this.initialized = true;
+  }
+
+  record() {
+    return new Promise(async (resolve, reject) => {
+      if(!this.initialized) {
+        await this.initialize();
+      }
+      if(!this.supported) {
+        alert('Audio recording not supported.');
+        return;
+      }
+      this.lastRecording = undefined;
+      this.stopped = false;
+      this.chunks = [];
+      this.recorder!.start();
+      resolve(true);
+    })
+    
+  }
+
+  stopRecording() {
+    this.stopped = true;
+    this.recorder!.stop();
+
+    return new Promise((resolve) => {
+      const interval = setInterval(() => {
+        if(this.lastRecording) {
+          resolve(this.lastRecording);
+          clearInterval(interval);
+        }
+      }, 400);
+    });
+  }
+}
 
 function App() {
 
-  const [showRecordingOverlay, setShowRecordingOverlay] = useState<boolean>(false);
+  const [showRecordingOverlay, _setShowRecordingOverlay] = useState<boolean>(false);
   const [recordingOverlayOpacity, setRecordingOverlayOpacity] = useState<number>(0);
 
+  const [recordingState, setRecordingState] = useState<'recording' | 'processing' | null>(null);
+
+  const recorderRef = useRef(new VoiceRecorder());
+
+  const setShowRecordingOverlay = (show: boolean) => {
+    if(show) {
+      _setShowRecordingOverlay(true);
+      setTimeout(() => {
+        setRecordingOverlayOpacity(1);
+      }, 100);
+    } else {
+      setRecordingOverlayOpacity(0);
+      setTimeout(() => {
+        _setShowRecordingOverlay(false);
+      }, 500);
+    }
+  }
+
   const startRecording = () => {
-    setShowRecordingOverlay(true);
-    setTimeout(() => {
-      setRecordingOverlayOpacity(1);
-    }, 100);
+    recorderRef.current.record().then(() => {
+      setShowRecordingOverlay(true);
+      setRecordingState('recording');
+    });
+  };
+
+  const finishRecording = async () => {
+    // setShowRecordingOverlay(false);
+    setRecordingState('processing');
+    const recording = await recorderRef.current.stopRecording();
+    console.log(recording);
   }
 
   return (
@@ -23,18 +121,35 @@ function App() {
         className={clsx(
           showRecordingOverlay || 'hidden',
           'transition-opacity duration-300 bg-neutral-500/50 absolute h-screen w-screen',
-          'flex flex-col items-center justify-center'
+          'flex flex-col items-center justify-center gap-6'
         )}
         style={{
           opacity: recordingOverlayOpacity,
         }}
       >
-        <div className='recording-outline'>
-          <RecordIcon
-            className='size-16 text-black'
+        {recordingState === 'recording' ? 
+          <>
+            <div className='recording-outline rounded-full aspect-square flex flex-col items-center justify-center p-4'>
+            
+            <RecordIcon
+              className='size-16 text-black'
+            />
+            <span className='text-black'>Recording</span>
+            </div>
+            <button
+              onClick={finishRecording}
+            >
+              Done
+            </button>
+          </>
+        : recordingState === 'processing' ?
+        <>
+          <Spinner 
+            className='h-14 w-14'
           />
-          <span className='text-black'>Recording</span>
-        </div>
+          <span className='text-black'>Processing</span>
+        </>
+        : null }
       </div>
       <div className='flex flex-col justify-center w-full h-full p-2'>
         {/* Report form */}

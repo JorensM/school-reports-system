@@ -1,5 +1,9 @@
 Todo:
 
-* Initialize git repository
-* Recording outline animation
 * API integration 
+* Responsiveness
+
+Done:
+* ~~Audio record feature~~
+* ~~Recording outline animation~~
+* ~~Initialize git repository~~

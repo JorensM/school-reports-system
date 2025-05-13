@@ -71,14 +71,15 @@ button.icon {
     outline-color: var(--color-neutral-800);
   } to {
     outline-width: 32px;
-    outline-color: var(--color-neutral-100);
+    outline-color: --alpha(var(--color-neutral-800) / 1%);
   }
 }
 
 .recording-outline {
   outline-color: var(--color-neutral-800);
   outline-width: 2px;
-  animation: 2s infinite alternate recording-outline;
+  outline-style: solid;
+  animation: 2s infinite recording-outline;
 }
 
 @media (prefers-color-scheme: light) {
