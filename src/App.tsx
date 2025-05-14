@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import RecordButton from './components/RecordButton'
 import SendButton from './components/SendButton'
 import clsx from 'clsx';
 import RecordIcon from './components/RecordIcon';
 import Spinner from './components/Spinner';
+import api from './util/API';
 
 class VoiceRecorder {
 
@@ -62,7 +63,7 @@ class VoiceRecorder {
     
   }
 
-  stopRecording() {
+  stopRecording(): Promise<Blob> {
     this.stopped = true;
     this.recorder!.stop();
 
@@ -83,6 +84,12 @@ function App() {
   const [recordingOverlayOpacity, setRecordingOverlayOpacity] = useState<number>(0);
 
   const [recordingState, setRecordingState] = useState<'recording' | 'processing' | null>(null);
+
+  const [reportDetailsValue, setReportDetailsValue] = useState<string>('');
+
+  const handleReportDetailsInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setReportDetailsValue(e.currentTarget.value);
+  }
 
   const recorderRef = useRef(new VoiceRecorder());
 
@@ -111,7 +118,9 @@ function App() {
     // setShowRecordingOverlay(false);
     setRecordingState('processing');
     const recording = await recorderRef.current.stopRecording();
-    console.log(recording);
+
+    const res = await api.transcribe(recording);
+    setReportDetailsValue(res.data);
   }
 
   return (
@@ -166,6 +175,8 @@ function App() {
             }
             id='report-details'
             name='report-details'
+            onChange={handleReportDetailsInputChange}
+            value={reportDetailsValue}
           >
 
           </textarea>
