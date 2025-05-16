@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/recordbutton.tsx","./src/components/recordicon.tsx","./src/components/sendbutton.tsx","./src/components/spinner.tsx","./src/util/api.ts"],"version":"5.8.3"}

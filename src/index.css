@@ -69,7 +69,9 @@ button.icon {
   from {
     outline-width: 0px;
     outline-color: var(--color-neutral-800);
-  } to {
+  } 
+  
+  to {
     outline-width: 32px;
     outline-color: --alpha(var(--color-neutral-800) / 1%);
   }
