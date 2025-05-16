@@ -66,12 +66,12 @@ button.icon {
 }
 
 @keyframes recording-outline {
-  from {
+  0% {
     outline-width: 0px;
     outline-color: var(--color-neutral-800);
   } 
   
-  to {
+  100% {
     outline-width: 32px;
     outline-color: --alpha(var(--color-neutral-800) / 1%);
   }
