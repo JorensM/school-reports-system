@@ -14,6 +14,7 @@ abstract class API {
         this.BASE_URL = baseUrl;
     }
 
+    //eslint-disable-next-line
     abstract request<T>(endpoint: string, data: Record<string, any>, method: 'PATCH' | 'POST' | 'GET' | 'DELETE'): Promise<APIResponse<T | undefined>>;
 
     abstract transcribe(audioFile: Blob): Promise<APIResponse<string>>;
@@ -23,6 +24,7 @@ abstract class API {
 
 class ServerlessAPI extends API {
 
+    //eslint-disable-next-line
     async request<T>(endpoint: string, data: Record<string, any>, method: 'PATCH' | 'POST' | 'GET' | 'DELETE'): Promise<APIResponse<T | undefined>> {
 
         let url: URL;

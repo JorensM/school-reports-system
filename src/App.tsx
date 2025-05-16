@@ -46,7 +46,8 @@ class VoiceRecorder {
   }
 
   record() {
-    return new Promise(async (resolve, reject) => {
+    //eslint-disable-next-line
+    return new Promise(async (resolve) => {
       if(!this.initialized) {
         await this.initialize();
       }
