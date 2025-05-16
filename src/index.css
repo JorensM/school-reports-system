@@ -79,7 +79,7 @@ button.icon {
   outline-color: var(--color-neutral-800);
   outline-width: 2px;
   outline-style: solid;
-  animation: 2s infinite recording-outline;
+  animation: recording-outline 2s infinite;
 }
 
 @media (prefers-color-scheme: light) {
