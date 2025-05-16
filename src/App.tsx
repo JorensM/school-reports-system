@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import RecordButton from './components/RecordButton'
 import SendButton from './components/SendButton'
 import clsx from 'clsx';
@@ -87,6 +87,8 @@ function App() {
 
   const [reportDetailsValue, setReportDetailsValue] = useState<string>('');
 
+  const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
+
   const handleReportDetailsInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setReportDetailsValue(e.currentTarget.value);
   }
@@ -123,6 +125,16 @@ function App() {
     setReportDetailsValue(res.data);
     setShowRecordingOverlay(false);
     setRecordingState('recording');
+  }
+
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormSubmitted(true);
+  }
+
+  const resetForm = () => {
+    setReportDetailsValue("");
+    setFormSubmitted(false);
   }
 
   return (
@@ -162,9 +174,12 @@ function App() {
         </>
         : null }
       </div>
-      <div className='flex flex-col justify-center w-full h-full p-2'>
+      <div className='flex flex-col justify-center w-full h-full p-2 items-center'>
         {/* Report form */}
-        <form>
+        <form 
+          className='flex flex-col w-full max-w-[400px] gap-1'
+          onSubmit={handleFormSubmit}
+        >
           <label
             htmlFor='report-details'
           >
@@ -172,23 +187,40 @@ function App() {
           </label>
           <textarea
             className={'bg-neutral-200 border border-neutral-700 rounded-md ' + 
-              'w-full max-w-[400px] h-[140px] text-neutral-700 p-1 outline-offset-2 transition-all duration-200 ' + 
+              'h-[140px] text-neutral-700 p-1 outline-offset-2 transition-all duration-200 ' + 
               'focus-within:ring-2 focus-within:ring-amber-500 focus-within:outline-0'
             }
             id='report-details'
             name='report-details'
             onChange={handleReportDetailsInputChange}
             value={reportDetailsValue}
+            required
           >
 
           </textarea>
-          <div className='flex justify-between'>
-            <SendButton 
-            />
-            <RecordButton 
-              onClick={startRecording}
-              type='button'
-            />
+          <div className='flex items-center justify-between'>
+            {
+              formSubmitted ?
+                <>
+                  <span>
+                    Report submitted.
+                  </span>
+                  <button
+                    onClick={resetForm}
+                  >
+                    New report
+                  </button>
+                </>
+              : 
+              <>
+                <SendButton 
+                />
+                <RecordButton 
+                  onClick={startRecording}
+                  type='button'
+                />
+              </>
+            }
           </div>
         </form>
       </div>
