@@ -153,7 +153,7 @@ function App() {
       >
         {recordingState === 'recording' ? 
           <>
-            <div className='recording-outline rounded-full aspect-square flex flex-col items-center justify-center p-4'>
+            <div className='recording-outline animate-recording-outline rounded-full aspect-square flex flex-col items-center justify-center p-4'>
             
             <RecordIcon
               className='size-16 text-black'
