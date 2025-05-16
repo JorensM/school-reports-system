@@ -66,8 +66,8 @@ button.icon {
 }
 
 @theme {  
-  --animate-recording-outline: recording-outline 1500ms infinite;
-  @keyframes recording-outline {
+  --animate-recording: recording-outline 1500ms infinite;
+  @keyframes recording {
     from {
       outline-width: 0px;
       outline-color: var(--color-neutral-700);
