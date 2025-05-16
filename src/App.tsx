@@ -121,6 +121,8 @@ function App() {
 
     const res = await api.transcribe(recording);
     setReportDetailsValue(res.data);
+    setShowRecordingOverlay(false);
+    setRecordingState('recording');
   }
 
   return (
