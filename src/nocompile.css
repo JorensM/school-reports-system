@@ -1,0 +1,23 @@
+/* 
+    This CSS file should not be compiled by Tailwind.
+    Please include explanations for why a particular part of CSS needs to
+    be here and not in index.css
+ */
+
+
+/* Tailwind incorrectly parses this keyframe and removes a part of the code completey */
+@keyframes recording-outline {
+    from {
+        outline-width: 0px;
+        outline-color: oklch(37.1% 0 0);
+    } 
+
+    to {
+        outline-width: 32px;
+        outline-color: oklch(37.1% 0 0 / 0.01);
+    }
+}
+
+.recording-outline {
+    animation: 1500ms infinite recording-outline;
+}
