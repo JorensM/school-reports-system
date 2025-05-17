@@ -65,7 +65,7 @@ button.icon {
   @apply px-4 py-3;
 }
 
-@keyframes recording-outline {
+/* @keyframes recording-outline {
   from {
     outline-width: 0px;
     outline-color: var(--color-neutral-800);
@@ -75,13 +75,13 @@ button.icon {
     outline-width: 32px;
     outline-color: --alpha(var(--color-neutral-800) / 1%);
   }
-}
+} */
 
 .recording-outline {
   outline-color: var(--color-neutral-800);
   outline-width: 2px;
   outline-style: solid;
-  animation: recording-outline 2s infinite;
+  /* @apply: animate-recording-outline; */
 }
 
 /* @media (prefers-color-scheme: light) {
